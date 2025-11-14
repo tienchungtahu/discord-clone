@@ -32,7 +32,7 @@ const roleIconMap = {
 export const ChatHeader = async ({ serverId, name, type, imgUrl }: ChatHeaderProps) => {
     const profile = await currentProfile();
     if (!profile) {
-        return redirect("/"); // or handle the case where the profile is not found
+        return redirect("/"); 
     }
     const server = await db.server.findUnique({
         where: {
