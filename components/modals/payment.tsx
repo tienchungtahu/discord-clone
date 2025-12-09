@@ -30,7 +30,7 @@ const PaymentModal = () => {
 
 
   return (
-    <Dialog open={isModalOpen} >
+    <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white dark:bg-zinc-700 dark:text-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-left font-bold">

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FileIcon, X } from "lucide-react";
+import { FileIcon, X, Upload } from "lucide-react";
 import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 
@@ -16,11 +16,16 @@ export function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
 
   if (value && fileType !== "pdf") {
     return (
-      <div className="relative h-20 w-20">
-        <Image fill src={value} alt="Upload" className="rounded-full object-cover" />
+      <div className="relative h-24 w-24 group">
+        <Image 
+          fill 
+          src={value} 
+          alt="Upload" 
+          className="rounded-full object-cover ring-4 ring-zinc-200 dark:ring-zinc-700" 
+        />
         <button
           onClick={() => onChange("")}
-          className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
+          className="bg-rose-500 hover:bg-rose-600 text-white p-1.5 rounded-full absolute -top-1 -right-1 shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
           type="button"
         >
           <X className="h-4 w-4" />
@@ -31,19 +36,21 @@ export function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
 
   if (value && fileType === "pdf") {
     return (
-      <div className="relative flex items-center p-2 mt-2 rounded-md bg-gray-100">
-        <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+      <div className="relative flex items-center p-3 mt-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-indigo-100 dark:bg-indigo-900/30">
+          <FileIcon className="h-6 w-6 text-indigo-500 dark:text-indigo-400" />
+        </div>
         <a
           href={value}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-2 text-sm text-indigo-500 hover:underline"
+          className="ml-3 text-sm text-indigo-500 dark:text-indigo-400 hover:underline truncate max-w-[200px]"
         >
-          {value}
+          PDF Document
         </a>
         <button
           onClick={() => onChange("")}
-          className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm"
+          className="bg-rose-500 hover:bg-rose-600 text-white p-1.5 rounded-full absolute -top-2 -right-2 shadow-lg transition-colors"
           type="button"
         >
           <X className="h-4 w-4" />
@@ -56,17 +63,30 @@ export function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
     <UploadDropzone
       endpoint={endpoint}
       onClientUploadComplete={(res) => {
-        if (res && res[0]?.url) {
-          onChange(res[0].url);
+        if (res && res[0]?.ufsUrl) {
+          onChange(res[0].ufsUrl);
         }
       }}
       onUploadError={(error: Error) => console.error(error.message)}
       appearance={{
         container:
-          "border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center bg-gray-50 hover:bg-gray-100 transition",
+          "border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-xl p-8 flex flex-col items-center justify-center text-center bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200 cursor-pointer",
+        label: "text-zinc-600 dark:text-zinc-300 font-medium",
+        allowedContent: "text-xs text-zinc-500 dark:text-zinc-400 mt-2",
         button:
-          "mt-2 bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition",
-        allowedContent: "text-xs text-gray-500 mt-2",
+          "mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg ut-uploading:bg-indigo-400",
+        uploadIcon: "text-zinc-400 dark:text-zinc-500 w-12 h-12 mb-2",
+      }}
+      content={{
+        label({ ready }) {
+          if (ready) return "Drop file here or click to browse";
+          return "Getting ready...";
+        },
+        allowedContent({ ready, fileTypes, isUploading }) {
+          if (!ready) return "Checking...";
+          if (isUploading) return "Uploading...";
+          return `${endpoint === "serverImage" ? "Image" : "File"} (4MB max)`;
+        },
       }}
     />
   );

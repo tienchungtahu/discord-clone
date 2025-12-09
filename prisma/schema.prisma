@@ -44,16 +44,25 @@ model ProfileHobby {
   @@index([profileId])
   @@index([hobbyId])
 }
+enum UserStatus {
+  ONLINE
+  IDLE
+  DND
+  OFFLINE
+}
+
 model Profile{
   id String @id @default(uuid())
   userId String @unique
   name String
-    isPremium Boolean  @default(false)
+  isPremium Boolean @default(false)
+  status UserStatus @default(OFFLINE)
+  lastSeen DateTime @default(now())
 
   imageUrl String @db.Text
   email String @db.Text
 
- hobbies  ProfileHobby[]
+  hobbies  ProfileHobby[]
 
   servers Server[]
   members Member[]

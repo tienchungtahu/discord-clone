@@ -17,11 +17,11 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
     const isAdmin = role === MemberRole.ADMIN;
     const isModerator = isAdmin || role === MemberRole.MODERATOR;
     return (
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
             <DropdownMenuTrigger
                 className="focus:outline-none" asChild
             >
-                <button className="w-full text-zinc-300 text-md px-3 ml-auto flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition" >
+                <button className="w-full text-zinc-700 dark:text-zinc-300 text-md px-3 ml-auto flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition" >
                     {server.name.length > 21 ? `${server.name.slice(0, 21)}...` : server.name}
                     <ChevronDown className="h-5 w-5 ml-auto" />
                 </button>
@@ -36,7 +36,10 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
                     </DropdownMenuItem>
                 )}
                 {isAdmin && (
-                    <DropdownMenuItem onClick={()=> onOpen("editServer",  { server })} className="px-3 py-2 text-sm cursor-pointer">
+                    <DropdownMenuItem onClick={(e) => {
+                        e.stopPropagation();
+                        onOpen("editServer",  { server });
+                    }} className="px-3 py-2 text-sm cursor-pointer">
                         Setting
                         <Settings className="h-4 w-4 ml-auto" />
                     </DropdownMenuItem>

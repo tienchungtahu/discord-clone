@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { SocketProvider } from "@/components/providers/socket-provider";
+import { PresenceProvider } from "@/components/providers/presence-provider";
 import QueryProvider from "@/components/providers/query-provider";
 import "react-toastify/dist/ReactToastify.css";
 import { Open_Sans } from "next/font/google";
@@ -34,12 +35,13 @@ export default function RootLayout({
             storageKey="discord-clone-theme"
           >
             <SocketProvider>
-              <ModalProvider />
-              <QueryProvider>
-                {" "}
-                <ToastContainer position="top-right" autoClose={3000} />
-                {children}
-              </QueryProvider>
+              <PresenceProvider>
+                <ModalProvider />
+                <QueryProvider>
+                  <ToastContainer position="top-right" autoClose={3000} />
+                  {children}
+                </QueryProvider>
+              </PresenceProvider>
             </SocketProvider>
           </ThemeProvider>
         </body>

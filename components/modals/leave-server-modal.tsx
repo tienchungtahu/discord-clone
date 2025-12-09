@@ -15,6 +15,7 @@ import { useModal } from "@/components/hooks/user-model-store";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 export const LeaveServerModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -35,27 +36,41 @@ export const LeaveServerModal = () => {
     } finally {
       setIsLoading(false);
     }
-
   }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-8 px-6 ">
-          <DialogTitle className="text-2xl text-left font-bold">
-            Leaving: <span className="text-rose-500">{server?.name}</span> ?
+      <DialogContent className="sm:max-w-[440px] p-0 overflow-hidden">
+        <DialogHeader className="pt-8 px-6 pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+              <LogOut className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <DialogTitle className="text-xl text-center font-bold">
+            Leave Server
           </DialogTitle>
-          <DialogDescription className="text-left">
-            You can't access this server unless u been invited again. Are your sure?
+          <DialogDescription className="text-center">
+            Are you sure you want to leave <span className="font-semibold text-amber-500">{server?.name}</span>? You won't be able to rejoin unless you're invited again.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="bg-gray-100 px-6 py-4">
-          <div className="flex items-center justify-between w-full ">
-            <Button disabled={isLoading} onClick={onClose} variant='ghost' >
+        
+        <DialogFooter className="bg-zinc-50 dark:bg-[#2b2d31] px-6 py-4">
+          <div className="flex items-center justify-end gap-3 w-full">
+            <Button 
+              disabled={isLoading} 
+              onClick={onClose} 
+              variant="ghost"
+              className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+            >
               Cancel
             </Button>
-            <Button disabled={isLoading} onClick={onClick} className="bg-red-600" >
-              Confirm
+            <Button 
+              disabled={isLoading} 
+              onClick={onClick} 
+              className="bg-amber-500 hover:bg-amber-600 text-white font-medium transition-colors"
+            >
+              Leave Server
             </Button>
           </div>
         </DialogFooter>

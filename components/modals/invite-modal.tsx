@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -12,7 +13,7 @@ import { useModal } from "@/components/hooks/user-model-store";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, RefreshCcw } from "lucide-react";
+import { Check, Copy, RefreshCcw, Users } from "lucide-react";
 import { useOrigin } from "@/components/hooks/use-origin";
 import axios from "axios";
 
@@ -26,6 +27,7 @@ export const InviteModal = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
+  
   const onCopy = () => {
     navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
@@ -33,39 +35,71 @@ export const InviteModal = () => {
       setCopied(false);
     }, 1000);
   }
+  
   const onNew = async () => {
-    try{
+    try {
       setIsLoading(true);
       const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
-
-      onOpen("invite", { server:  response.data });
-    }catch (error) {
+      onOpen("invite", { server: response.data });
+    } catch (error) {
       console.error("Failed to generate new invite link:", error);
-      // Optionally, you can handle the error here, e.g., show a toast notification
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-8 px-6 ">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden">
+        <DialogHeader className="pt-8 px-6 pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
           <DialogTitle className="text-2xl text-center font-bold">
             Invite Friends
           </DialogTitle>
+          <DialogDescription className="text-center">
+            Share this link with others to grant access to <span className="font-semibold text-indigo-500 dark:text-indigo-400">{server?.name}</span>
+          </DialogDescription>
         </DialogHeader>
-        <div className="p-6">
-          <Label className="uppercase text-xs text-zinc-500 dark:text-secondary/70">Server invite link: </Label>
+        
+        <div className="px-6 pb-6 pt-2">
+          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-zinc-400 tracking-wide">
+            Server Invite Link
+          </Label>
           <div className="flex items-center mt-2 gap-x-2">
-            <Input disabled={isLoading} readOnly className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0" value={inviteUrl} />
-            <Button disabled={isLoading} onClick={onCopy} size="icon" >
+            <Input 
+              disabled={isLoading} 
+              readOnly 
+              className="bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 focus-visible:ring-2 focus-visible:ring-indigo-500 text-zinc-800 dark:text-zinc-200 font-mono text-sm" 
+              value={inviteUrl} 
+            />
+            <Button 
+              disabled={isLoading} 
+              onClick={onCopy} 
+              size="icon"
+              className={`transition-all duration-200 ${
+                copied 
+                  ? 'bg-emerald-500 hover:bg-emerald-600' 
+                  : 'bg-indigo-500 hover:bg-indigo-600'
+              } text-white`}
+            >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </Button>
-            </div>
-            <Button onClick={onNew} disabled={isLoading} variant="link" size="sm" className="text-xs text-zinc-500 mt-4" >
-              Generate a new link
-              <RefreshCcw className="w-4 h-4 ml-2" />
-            </Button>
+          </div>
+          
+          <Button 
+            onClick={onNew} 
+            disabled={isLoading} 
+            variant="ghost" 
+            size="sm" 
+            className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-indigo-500 dark:hover:text-indigo-400 mt-3 px-0 transition-colors"
+          >
+            <RefreshCcw className={`w-3 h-3 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            Generate a new link
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

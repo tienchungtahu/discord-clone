@@ -72,14 +72,14 @@ export function PublicServerModal() {
         </DialogHeader>
           <form  className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="grid grid-cols-1 gap-2 mt-4">
+              <div className="grid grid-cols-2 gap-2 mt-4">
                 {interestsList.map((interest, index) => (
                   <Button
                     key={interest}
                     type="button"
                     variant={selected === interest ? "default" : "outline"}
                     onClick={() => toggleInterest(interest)}
-                    className="flex items-center gap-2 dark:bg-zinc-200 dark:text-shadow-zinc-700"
+                    className="flex items-center gap-2 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-shadow-zinc-700"
                   >
                     <span>{iconInterestList[index]}</span>
                     {interest}
@@ -88,7 +88,7 @@ export function PublicServerModal() {
               </div>
             </div>
           </form>
-        <DialogFooter className="bg-gray-100 w-full items-center align-middle grid  px-6 py-4">
+        <DialogFooter className="bg-gray-100 dark:bg-zinc-700 w-full items-center align-middle grid  px-6 py-4">
           <p className="text-xs">
             {" "}
             By successfully creating a public server, you agree to our public{" "}

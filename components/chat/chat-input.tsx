@@ -112,8 +112,12 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                     {...field}
                     className="px-16 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200 "
                   />
-                  <button className="absolute top-7 right-19" onClick={() => onOpen("payment")}>
-                    <Gift className="cursor-pointer text-zinc-600 dark:text-zinc-400 hover:text-indigo-500 transition" />{" "}
+                  <button 
+                    type="button" 
+                    className="absolute top-7 right-19" 
+                    onClick={() => onOpen("payment")}
+                  >
+                    <Gift className="cursor-pointer text-zinc-600 dark:text-zinc-400 hover:text-indigo-500 transition" />
                   </button>
                   <div className="absolute top-7 right-8" >
                     <EmojiPicker

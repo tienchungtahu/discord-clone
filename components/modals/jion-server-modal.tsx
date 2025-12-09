@@ -21,6 +21,8 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog";
+import { Compass, Link2 } from "lucide-react";
+
 const formSchema = z.object({
     link: z.string().min(1, { message: "Server link is required." }),
 });
@@ -48,74 +50,77 @@ const JoinServerModal = () => {
             console.error(error);
         }
     };
+    
     const handleClose = () => {
         form.reset();
         onClose();
     };
+
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
-            <DialogContent className="bg-white text-black p-0 overflow-hidden">
-                <DialogHeader className="pt-8 px-6">
+            <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden">
+                <DialogHeader className="pt-8 px-6 pb-2">
+                    <div className="flex items-center justify-center mb-2">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                            <Link2 className="w-6 h-6 text-white" />
+                        </div>
+                    </div>
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Join the Server
+                        Join a Server
                     </DialogTitle>
-                    <DialogDescription className="text-center text-zinc-500">
-                        Paste the invite link to join an existing server
+                    <DialogDescription className="text-center">
+                        Enter an invite link below to join an existing server
                     </DialogDescription>
                 </DialogHeader>
+                
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <div className="space-y-8 px-6">
-                            <div className="flex items-center justify-center text-center">
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="link"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className=" text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                                            Server Link
-                                        </FormLabel>
-                                        <div className="flex space-between gap-2">
-                                            <FormControl>
-                                                <Input
-                                                    disabled={isLoading}
-                                                    placeholder="https://discord.gg/aBcdxYz23"
-                                                    className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 w-[88%]"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <Button
-                                                type="submit"
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-6 py-2">
+                        <FormField
+                            control={form.control}
+                            name="link"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-zinc-400 tracking-wide">
+                                        Invite Link
+                                    </FormLabel>
+                                    <div className="flex gap-2">
+                                        <FormControl>
+                                            <Input
                                                 disabled={isLoading}
-                                                className="w-[60px]"
-                                                variant="primary"
-                                            >
-                                                Join
-                                            </Button>
-                                        </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                                                placeholder="https://discord.gg/aBcdxYz23"
+                                                className="flex-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 focus-visible:ring-2 focus-visible:ring-indigo-500 text-zinc-800 dark:text-zinc-200"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <Button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition-colors px-6"
+                                        >
+                                            Join
+                                        </Button>
+                                    </div>
+                                    <FormMessage className="text-rose-500" />
+                                </FormItem>
+                            )}
+                        />
                     </form>
                 </Form>
-                <DialogFooter className="bg-gray-100 w-full items-center align-middle grid  px-6 py-4">
-                    <p className="ml-27 text-sm ">Or explore our public Server below</p>
+                
+                <DialogFooter className="bg-zinc-50 dark:bg-[#2b2d31] w-full px-6 py-5 flex-col gap-3">
                     <Button
-                        className="bg-zinc-200 text-zinc-700 w-full dark:bg-zinc-300 dark:text-zinc-500 mr-20"
+                        className="w-full bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-medium transition-colors"
                         variant="secondary"
                         onClick={() => {
                             onOpen("selectInterests");
                         }}
                     >
-                        Or select your interests and join our public Server
+                        <Compass className="w-4 h-4 mr-2" />
+                        Explore Public Servers
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-
     );
 };
 

@@ -4,19 +4,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import { CreditCard } from "lucide-react";
 
 const PaymentPageModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const user = useUser();
   const isModalOpen = isOpen && type === "paymentPage";
-  const onClick = async () => {
+  
+  const onStripeClick = async () => {
     try {
       const res = await axios.post("/api/checkout/stripe", {
         plan: data.paymentSelect,
@@ -33,63 +34,85 @@ const PaymentPageModal = () => {
   const handleClose = () => {
     onClose();
   };
+
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white w-[340px] dark:bg-zinc-800 dark:text-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-0.5xl text-left text-white font-bold">
-            Choosing payment method
+      <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden">
+        <DialogHeader className="pt-8 px-6 pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+              <CreditCard className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <DialogTitle className="text-xl text-center font-bold">
+            Choose Payment Method
           </DialogTitle>
-          <DialogDescription className="text-left text-white">
-            Select payment type
+          <DialogDescription className="text-center">
+            Select your preferred payment option to continue
           </DialogDescription>
         </DialogHeader>
-        <div className="items-center flex flex-col-2 gap-2 px-6 pb-6">
+        
+        <div className="px-6 pb-6 space-y-3">
           <Button
-            className="ml-4 w-[120px] p-2 bg-white dark:bg-white text-zinc-800"
+            className="w-full h-14 justify-start gap-3 bg-white hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 transition-all duration-200"
             variant="outline"
-            onClick={() => onClick()}
+            onClick={onStripeClick}
           >
-            <Image
-              src="/stripe.png"
-              alt="Stripe"
-              width={30}
-              height={30}
-              className="mr-2 border-radius: 20%"
-            />
-            Stripe
+            <div className="w-10 h-10 rounded-lg bg-[#635BFF] flex items-center justify-center">
+              <Image
+                src="/stripe.png"
+                alt="Stripe"
+                width={24}
+                height={24}
+                className="rounded"
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-semibold">Stripe</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">Credit/Debit Card</span>
+            </div>
           </Button>
+          
           <Button
-            className="ml-6 w-[120px] p-2 bg-white dark:bg-white text-zinc-800"
+            className="w-full h-14 justify-start gap-3 bg-white hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 transition-all duration-200"
             variant="outline"
             onClick={() => {}}
           >
-            <Image
-              src="/momo.png"
-              alt="Stripe"
-              width={30}
-              height={30}
-              className="mr-2 border-radius: 20%"
-            />
-            Momo
+            <div className="w-10 h-10 rounded-lg bg-[#A50064] flex items-center justify-center">
+              <Image
+                src="/momo.png"
+                alt="Momo"
+                width={24}
+                height={24}
+                className="rounded"
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-semibold">MoMo</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">E-Wallet Vietnam</span>
+            </div>
+          </Button>
+          
+          <Button
+            className="w-full h-14 justify-start gap-3 bg-white hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 transition-all duration-200"
+            variant="outline"
+            onClick={() => {}}
+          >
+            <div className="w-10 h-10 rounded-lg bg-[#0066B3] flex items-center justify-center">
+              <Image
+                src="/vnpay.png"
+                alt="VNPay"
+                width={24}
+                height={24}
+                className="rounded"
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-semibold">VNPay</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">Bank Transfer Vietnam</span>
+            </div>
           </Button>
         </div>
-        <Button
-          className="ml-10  w-[120px] p-2 bg-white dark:bg-white text-zinc-800"
-          variant="outline"
-          onClick={() => {
-          }}
-        >
-          <Image
-            src="/vnpay.png"
-            alt="Stripe"
-            width={30}
-            height={30}
-            className="mr-2 border-radius: 20%"
-          />
-          VNPay
-        </Button>
-        <DialogFooter className="bg-gray-100 dark:bg-zinc-800 dark:text-white w-full items-center align-middle grid  px-6 py-4"></DialogFooter>
       </DialogContent>
     </Dialog>
   );

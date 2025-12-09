@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { ShowMemberChannel } from "@/components/righsidebar/right-sidebar";
+import { RightSidebarSkeleton } from "@/components/righsidebar/member-skeleton";
 import { ServerSidebar } from "@/components/server/server-siderbar";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -14,15 +16,20 @@ const ServerIdLayout = async ({
   const { serverId } = await params;
   const profile = await currentProfile();
 
+  if (!profile) {
+    return redirect("/");
+  }
+
   const server = await db.server.findUnique({
     where: {
       id: serverId,
       members: {
         some: {
-          profileId: profile?.id,
+          profileId: profile.id,
         },
       },
     },
+    select: { id: true },
   });
 
   if (!server) {
@@ -31,12 +38,14 @@ const ServerIdLayout = async ({
 
   return (
     <div className="h-full">
-      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0 ">
+      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ServerSidebar serverId={serverId} />
       </div>
-      <main className="h-full md:pl-60">{profile && children}</main>
-      <div className="hidden md:flex h-full w-60 flex-col fixed inset-y-0 right-0 border-l-1 my-12 ">
-        <ShowMemberChannel serverId={serverId} />
+      <main className="h-full md:pl-60">{children}</main>
+      <div className="hidden md:flex h-full w-60 flex-col fixed inset-y-0 right-0 border-l-1 my-12">
+        <Suspense fallback={<RightSidebarSkeleton />}>
+          <ShowMemberChannel serverId={serverId} />
+        </Suspense>
       </div>
     </div>
   );

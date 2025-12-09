@@ -18,10 +18,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/components/hooks/user-model-store";
 import { FileUpload } from "@/components/file-upload";
-
+import { Upload } from "lucide-react";
 
 const formSchema = z.object({
-  fileUrl: z.string().min(1, { message: "Attactment is required." }),
+  fileUrl: z.string().min(1, { message: "Attachment is required." }),
 });
 
 export const MessageFileModal = () => {
@@ -43,6 +43,7 @@ export const MessageFileModal = () => {
   };
 
   const isLoading = form.formState.isSubmitting;
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
@@ -53,23 +54,31 @@ export const MessageFileModal = () => {
       form.reset();
       router.refresh();
       handleClose();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="!fixed !left-1/2 !top-1/2 !translate-x-[-50%] !translate-y-[-50%] sm:max-w-xl sm:rounded-lg  bg-white text-black">
-        <DialogHeader className="pt-8 px-6 ">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden">
+        <DialogHeader className="pt-8 px-6 pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+              <Upload className="w-6 h-6 text-white" />
+            </div>
+          </div>
           <DialogTitle className="text-2xl text-center font-bold">
             Upload File
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-600">
-            Send a file as a message
+          <DialogDescription className="text-center">
+            Send a file as a message to the channel
           </DialogDescription>
         </DialogHeader>
+        
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 px-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="px-6">
               <div className="flex items-center justify-center text-center">
                 <FormField
                   control={form.control}
@@ -85,17 +94,18 @@ export const MessageFileModal = () => {
                       </FormControl>
                     </FormItem>
                   )}
-                ></FormField>
+                />
               </div>
             </div>
-            <DialogFooter className="bg-gray-100 px-6 py-4">
+            
+            <DialogFooter className="bg-zinc-50 dark:bg-[#2b2d31] px-6 py-4">
               <Button
-                variant="primary"
                 disabled={isLoading}
                 type="submit"
-                className="w-full"
+                className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition-colors"
               >
-                Upload
+                <Upload className="w-4 h-4 mr-2" />
+                Send File
               </Button>
             </DialogFooter>
           </form>
